@@ -26,15 +26,13 @@
                  (if public? "#" "")
                  (or name
                      (gfycat/generate-gfy public-key)))]
-      ;(log/debug "chat-list-item:" chat-item)
-      ;(log/debug "last-message" last-message)
       [react/view {:style (styles/chat-list-item (= current-chat-id chat-id))}
        (if public?
          [react/view {:style styles/topic-image}
           [react/text {:style styles/topic-text} 
            (string/capitalize (second name))]]
          [react/image {:style styles/chat-icon
-                     :source {:uri photo-path}}])
+                       :source {:uri photo-path}}])
        [react/view {:style styles/chat-name-last-msg-box}
         [react/view {:style styles/chat-name-box}
          (when (and group-chat (not public?))
@@ -49,11 +47,9 @@
                      :number-of-lines 1
                      :style           styles/chat-last-message}
          (or (:content last-message) (i18n/label :no-messages-yet))]]
-       [react/view
+       [react/view {:style {:width 64 :justify-content :flex-start}}
         [chat-item/message-timestamp last-message]
-        [react/text]]
-       [react/view {:style {:flex 1}}]
-       [unviewed-indicator chat-id]])))
+        [react/text]]])))
 
 (defn chat-list-item [[chat-id chat]]
   [react/touchable-highlight {:on-press #(re-frame/dispatch [:navigate-to-chat chat-id])}

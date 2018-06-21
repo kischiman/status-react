@@ -6,8 +6,10 @@
    :background-color colors/white})
 
 (defn chat-list-item [current?]
-  {:padding          12 
+  {:padding          16 
    :flex-direction   :row 
+   :flex 1
+   :justify-content  :space-between
    :background-color (if current? colors/gray-lighter colors/white)
    :align-items      :center})
 
@@ -32,8 +34,8 @@
    :align-items    :center})
 
 (def chat-name-last-msg-box
-  {:margin-right 25 
-   :width        183})
+  {:flex 1
+   :margin-right 16})
 
 (defn chat-name [current?]
   {:font-size   14
