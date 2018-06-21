@@ -3,8 +3,9 @@
             [re-frame.core :as re-frame]
             [status-im.constants :as constants]
             [status-im.native-module.core :as status]
+            [status-im.utils.utils :as utils]
             [status-im.utils.datetime :as datetime]
-            [status-im.utils.ethereum.core :as utils]
+            [status-im.utils.ethereum.core :as ethereum-utils]
             [status-im.utils.handlers :as handlers]
             [status-im.utils.handlers-macro :as handlers-macro]
             [status-im.utils.web3-provider :as web3-provider]
@@ -44,9 +45,11 @@
       (when web3 ; necessary because of the unit tests
         (.getNetwork (.-version web3)
                      (fn [_ fetched-network-id]
-                       (assert (= network-id
-                                  fetched-network-id)
-                               "Ethereum node was started with incorrect configuration")))))))
+                       (when (not= network-id fetched-network-id)
+                         (utils/show-popup
+                          "Ethereum node started incorrectly"
+                          "Ethereum node was started with incorrect configuration, application will be stopped to recover from that condition."
+                          #(re-frame/dispatch [:close-application])))))))))
 
 (defn initialize-protocol
   [{:data-store/keys [transport mailservers] :keys [db web3] :as cofx} [current-account-id ethereum-rpc-url]]
@@ -100,6 +103,6 @@
  :initialize-sync-listener
  (fn [{{:keys [sync-listening-started network account/account] :as db} :db} _]
    (when (and (not sync-listening-started)
-              (not (utils/network-with-upstream-rpc? (get-in account [:networks network]))))
+              (not (ethereum-utils/network-with-upstream-rpc? (get-in account [:networks network]))))
      {:db       (assoc db :sync-listening-started true)
       :dispatch [:check-sync]})))
