@@ -37,7 +37,7 @@
                                          (let [native-event (.-nativeEvent e)
                                                text (.-text native-event)]
                                            (re-frame/dispatch [:set :contacts/new-identity text])))}]
-       [react/touchable-highlight {:on-press #(when-not chat-error (re-frame/dispatch [:add-contact-handler new-contact-identity]))}
+       [react/touchable-highlight {:disabled chat-error :on-press #(when-not chat-error (re-frame/dispatch [:add-contact-handler new-contact-identity]))}
         [react/view 
          {:style (styles/add-contact-button chat-error)} 
          [react/text 
@@ -75,7 +75,8 @@
                                             (if (not (string/starts-with? text "#"))
                                               (.setNativeProps @topic-input-ref (js-obj "text" (str "#" text)))
                                               (re-frame/dispatch [:set :public-group-topic (subs text 1)]))))}]]
-       [react/touchable-highlight {:on-press #(when-not topic-error 
+       [react/touchable-highlight {:disabled topic-error
+                                   :on-press #(when-not topic-error 
                                                 (do
                                                   (re-frame/dispatch [:set :public-group-topic nil])
                                                   (re-frame/dispatch [:create-new-public-chat topic])))}

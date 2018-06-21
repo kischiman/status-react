@@ -1,14 +1,14 @@
 (ns status-im.ui.screens.desktop.main.tabs.home.styles
   (:require [status-im.ui.components.colors :as colors]))
 
-(def chat-list-view
+(def chat-list-view 
   {:flex             1 
    :background-color colors/white})
 
 (defn chat-list-item [current?]
   {:padding          16 
    :flex-direction   :row 
-   :flex 1
+   :flex             1
    :justify-content  :space-between
    :background-color (if current? colors/gray-lighter colors/white)
    :align-items      :center})
@@ -34,8 +34,7 @@
    :align-items    :center})
 
 (def chat-name-last-msg-box
-  {:flex 1
-   :margin-right 16})
+  {:flex 1})
 
 (defn chat-name [current?]
   {:font-size   14
@@ -44,6 +43,11 @@
 (def chat-last-message 
   {:color     colors/gray
    :font-size 14})
+
+(def timestamp
+  {:width           64 
+   :justify-content :flex-start 
+   :align-items     :flex-end})
 
 (def add-new
   {:background-color colors/blue

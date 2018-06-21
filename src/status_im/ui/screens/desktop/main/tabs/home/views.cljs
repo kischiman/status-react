@@ -47,7 +47,7 @@
                      :number-of-lines 1
                      :style           styles/chat-last-message}
          (or (:content last-message) (i18n/label :no-messages-yet))]]
-       [react/view {:style {:width 64 :justify-content :flex-start}}
+       [react/view {:style styles/timestamp}
         [chat-item/message-timestamp last-message]
         [react/text]]])))
 
