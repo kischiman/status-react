@@ -41,11 +41,12 @@
   ;; Assure that node was started correctly
   (let [{:keys [network web3]} db]
     (when-let [network-id (str (get-in db [:account/account :networks network :config :NetworkId]))]
-      (.getNetwork (.-version web3)
-                   (fn [_ fetched-network-id]
-                     (assert (= network-id
-                                fetched-network-id)
-                             "Ethereum node was started with incorrect configuration"))))))
+      (when web3 ; necessary because of the unit tests
+        (.getNetwork (.-version web3)
+                     (fn [_ fetched-network-id]
+                       (assert (= network-id
+                                  fetched-network-id)
+                               "Ethereum node was started with incorrect configuration")))))))
 
 (defn initialize-protocol
   [{:data-store/keys [transport mailservers] :keys [db web3] :as cofx} [current-account-id ethereum-rpc-url]]
