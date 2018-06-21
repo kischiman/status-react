@@ -36,6 +36,17 @@
  (fn []
    (status/init-jail)))
 
+(defn- assert-correct-network
+  [{:keys [db]}]
+  ;; Assure that node was started correctly
+  (let [{:keys [network web3]} db]
+    (when-let [network-id (str (get-in db [:account/account :networks network :config :NetworkId]))]
+      (.getNetwork (.-version web3)
+                   (fn [_ fetched-network-id]
+                     (assert (= network-id
+                                fetched-network-id)
+                             "Ethereum node was started with incorrect configuration"))))))
+
 (defn initialize-protocol
   [{:data-store/keys [transport mailservers] :keys [db web3] :as cofx} [current-account-id ethereum-rpc-url]]
   (handlers-macro/merge-fx cofx
@@ -43,6 +54,7 @@
                                        :web3 web3
                                        :rpc-url (or ethereum-rpc-url constants/ethereum-rpc-url)
                                        :transport/chats transport)}
+                           (assert-correct-network)
                            (transport.inbox/initialize-offline-inbox mailservers)
                            (transport/init-whisper current-account-id)))
 ;;; INITIALIZE PROTOCOL
