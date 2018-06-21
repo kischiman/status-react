@@ -404,10 +404,10 @@
 
 ;; dispatch :update-transactions to update confirmations count
 ;; to verify tx initiated with /send command is confirmed
-(defn update-transactions [command-name tx-hash {:keys [with-delay?]} _]
+(defn update-transactions [command-name tx-hash {:keys [with-delay?]} cofx]
   (when (and tx-hash
              (= command-name constants/command-send))
-    (cond-> {:dispatch [:update-transactions]}
+    (cond-> {:update-transactions-fx cofx}
       with-delay?
       (assoc :utils/dispatch-later [{:ms       30000
                                      :dispatch [:update-transactions]}
